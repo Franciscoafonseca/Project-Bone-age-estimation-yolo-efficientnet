@@ -202,6 +202,7 @@ output_preprocessed_dir: "data/preprocessed"
 #   recreate_dataset: False
 recreate_dataset: False
 
+####### DO NOT TOUCH ON YOLO #######
 # ============================================================
 # YOLO hand/wrist crop
 # ============================================================
