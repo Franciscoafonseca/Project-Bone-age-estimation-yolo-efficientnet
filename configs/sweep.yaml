@@ -1,0 +1,27 @@
+program: main.py
+method: bayes
+metric:
+  name: val/mse
+  goal: minimize
+parameters:
+  learning_rate:
+    min: 0.01
+    max: 0.1
+  batch_size:
+    values: [32, 64]
+  optimizer:
+    values: ["adam", "sgd-m"]
+  momentum:
+    min: 0.85
+    max: 0.98
+  weight_decay:
+    min: 0.00003
+    max: 0.0005
+  model_name:
+    values: ["resnet50", "resnet152", "vgg16", "efficientnet_v2_m", "densenet121", "densenet169", "xception"]
+  use_lr_scheduler:
+    values: [True, False]
+  lr_step_size:
+    values: [25,50]
+  lr_gamma:
+    values: [0.1, 0.25, 0.5]

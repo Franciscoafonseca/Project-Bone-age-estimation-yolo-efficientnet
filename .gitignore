@@ -1,0 +1,134 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+site/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# ============================================================
+# Virtual environments
+# ============================================================
+venv/
+.env/
+env/
+ENV/
+.venv/
+conda-meta/
+
+# ============================================================
+# Jupyter
+# ============================================================
+.ipynb_checkpoints/
+
+# ============================================================
+# IDE / OS
+# ============================================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
+logs/
+wandb/
+mlruns/
+
+# ============================================================
+# Training outputs
+# ============================================================
+results/
+runs/
+checkpoints/
+outputs/
+artifacts/
+predictions/
+heatmaps/
+gradcam/
+grad_cam/
+
+# ============================================================
+# Preprocessed/generated images
+# These are generated automatically by main.py
+# ============================================================
+data/preprocessed/
+data/preprocessed/*
+data/*_preview/
+data/yolo_crop_preview/
+data/preprocessed/yolo_crop_preview/
+
+# ============================================================
+# Raw dataset
+# Do not upload medical/private image data to GitHub.
+# Keep only folder placeholders if needed.
+# ============================================================
+data/images/
+data/images/*
+!data/images/.gitkeep
+
+# ============================================================
+# Excel/data files
+# Usually private. Do not commit unless you are sure it can be public.
+# If your colleagues need the Excel, share it privately.
+# ============================================================
+data/*.xlsx
+data/*.xls
+data/*.csv
+data/*.parquet
+data/*.pkl
+data/*.pickle
+
+# Keep documentation files if you create them inside data/
+!data/README.md
+
+# ============================================================
+# Model weights
+# By default, ignore generated/trained weights.
+# ============================================================
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+
+# Exception: keep YOLO hand/wrist detector if it is small enough for GitHub.
+# If this file is too large, use Git LFS or share it separately.
+!models/yolo_hand/best.pt
+
+# ============================================================
+# Ultralytics YOLO output folders
+# ============================================================
+runs/detect/
+runs/train/
+runs/segment/
+runs/classify/
+ultralytics_runs/
+
+# ============================================================
+# Temporary files
+# ============================================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.old
+
+# ============================================================
+# Windows / Anaconda leftovers
+# ============================================================
+*.lnk
+*.ini

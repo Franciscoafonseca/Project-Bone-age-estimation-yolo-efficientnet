@@ -1,0 +1,12 @@
+numpy
+pandas
+openpyxl
+pyyaml
+tqdm
+pillow
+opencv-python
+matplotlib
+scikit-learn
+wandb
+timm
+ultralytics
