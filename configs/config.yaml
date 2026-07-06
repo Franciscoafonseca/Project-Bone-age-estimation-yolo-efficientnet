@@ -1,58 +1,25 @@
 # ============================================================
 # Bone Age Identification - YOLO Crop + EfficientNetV2 Regression
-# ============================================================
-# Objective:
-#   1. Read X-ray images from data/images
-#   2. Crop hand/wrist region using YOLO
-#   3. Train EfficientNetV2-M to predict bone age
-#   4. Target variable comes from the Excel file, in months
-#
-# Important:
-#   This project is now configured for AGE REGRESSION.
-#   It no longer uses with_treatment / without_treatment folders.
+# Safe config for Windows / Cheetah VM without NVIDIA GPU
 # ============================================================
 
 # ============================================================
-# Training hyperparameters
+# Training
 # ============================================================
 
-learning_rate: 0.01
-
-# Real training configuration.
-# For a quick test, use epochs: 2.
-# For proper training, use epochs: 100.
-epochs: 100
-
-# CPU:
-#   batch_size: 4 is safer.
-# GPU:
-#   try 8, 16, or 32 depending on available VRAM.
-batch_size: 4
+learning_rate: 0.0001
+epochs: 2
+batch_size: 2
 
 train_split: 0.7
 val_split: 0.15
 test_split: 0.15
 
 seed: 42
-
-# Saves checkpoint every N epochs.
-save_interval: 25
-
-# Windows recommendation:
-#   num_workers: 0 avoids multiprocessing/DataLoader errors.
-# Linux/GPU machine:
-#   can try 2, 4, or 8.
+save_interval: 1
 num_workers: 0
 
-# ============================================================
-# Optimizer
-# ============================================================
-
-# Options supported by the project:
-#   "adam"
-#   "sgd-m"
-optimizer: "sgd-m"
-
+optimizer: "adam"
 momentum: 0.9
 weight_decay: 0.0001
 
@@ -64,232 +31,116 @@ early_stop_patience: 10
 early_stop_min_delta: 0.00001
 
 # ============================================================
-# Task configuration
+# Task
 # ============================================================
 
-# Main task:
-#   binary      -> old treatment/no-treatment classification
-#   multiclass  -> classification
-#   regression  -> bone age prediction
-#   stages      -> dental stage methods
-#
-# For this project, use regression.
 model_task: "regression"
-
-# Main model.
-# Options may include:
-#   resnet18
-#   resnet50
-#   resnet152
-#   vgg16
-#   vgg19
-#   efficientnet_b5
-#   efficientnet_v2_m
-#   densenet121
-#   densenet169
-#   xception
 model_name: "efficientnet_v2_m"
 
-# These are kept for compatibility with the original project.
-# They are not central for regression with hand X-rays.
+pretrained: True
+
 stage_method: "H"
 stage_jaw_selection: "both"
 
-# IMPORTANT:
-# Must be False for the current bone-age regression dataset.
-# Do not use with_treatment / without_treatment folders.
 use_with_treatment: False
 dataset_layout: "flat"
 treatment_col: null
 
-# Kept for compatibility with old binary mode.
-# In regression mode, this is not the target.
-# If you later create a binary experiment >16 vs <=16 years,
-# then this value can be used.
 age_threshold: 16
-
-# Class weights are not used in regression.
 use_class_weights: False
-
-# Regression output configuration.
-# False means the model predicts a direct continuous value.
 use_regression_sigmoid: False
 
 # ============================================================
-# GPU / CPU
+# CPU / GPU
 # ============================================================
 
-# "all" uses all available GPUs if CUDA is available.
-# If no CUDA is available, the code falls back to CPU.
-# Examples:
-#   gpu_ids: "all"
-#   gpu_ids: "0"
-#   gpu_ids: "0,1"
+# Keep "all".
+# If CUDA exists, it uses available GPU.
+# If not, it falls back to CPU.
 gpu_ids: "all"
 
 # ============================================================
-# Excel / annotation file
+# Excel / labels
 # ============================================================
 
-# Excel must be inside:
-#   data/FCT2025_Final.xlsx
 ann_file: "FCT2025_Final.xlsx"
-
-# Sheet index or name.
-# 0 means first sheet.
 excel_sheet: 0
 
 # Your Excel has no image ID column.
-# Therefore the project uses row order:
-#   1.jpg    -> Excel row 1
-#   2.jpeg   -> Excel row 2
-#   597.jpg  -> Excel row 597
+# Therefore:
+# 1.jpg -> Excel row 1
+# 2.jpg -> Excel row 2
+# ...
 id_col: null
 
-# Target column used for regression.
 target_col: "Idade na data da radiografia (meses)"
-
-# The target is stored in months.
 target_unit: "months"
 
-# Normalise age values internally.
-# The model learns in a normalized range and metrics are reported back in years.
 normalize_age: True
-
-# Age range used for normalization, in years.
-# Your current dataset appears to cover roughly child/adolescent ages.
 min_age: 5
 max_age: 26
+
+sex_col: "Sexo"
+birth_date_col: "Data de Nascimento"
+opg_date_col: "Data de realização da radiografia"
+age_col: "Idade na data da radiografia (anos)"
 
 # ============================================================
 # Image preprocessing
 # ============================================================
 
-# Options:
-#   original
-#   center_crop
-#   clahe
-#   center_crop_then_crop
-#   clahe_center_crop_then_crop
-#   yolo_crop
-#   yolo_clahe_crop
-#
-# Current recommended mode:
 image_processing: "yolo_crop"
 
-# Original images folder.
-# Must contain:
-#   1.jpg
-#   2.jpeg
-#   ...
-#   597.jpg
 input_image_dir: "data/images"
-
-# Base output folder for generated crops.
-# Final crops will be saved to:
-#   data/preprocessed/yolo_crop
 output_preprocessed_dir: "data/preprocessed"
 
-# True:
-#   regenerate YOLO crops before training.
-# False:
-#   use already generated crops.
-#
-# First run:
-#   recreate_dataset: True
-#
-# After checking the crops:
-#   recreate_dataset: False
-recreate_dataset: False
+# First proper run: True, to regenerate YOLO crops.
+# After crops are generated and checked, change to False.
+recreate_dataset: True
 
-####### DO NOT TOUCH ON YOLO #######
 # ============================================================
-# YOLO hand/wrist crop
+# YOLO crop
 # ============================================================
 
-# YOLO model trained to detect the hand/wrist region.
-# Required file:
-#   models/yolo_hand/best.pt
 yolo_model_path: "models/yolo_hand/best.pt"
 
-# YOLO confidence threshold.
-# Increase if false detections happen.
-# Decrease if YOLO misses valid hands.
+# Since the VM probably has no NVIDIA, force YOLO to CPU.
+yolo_device: "cpu"
+
 yolo_conf: 0.30
-
-# YOLO IoU threshold for box filtering.
 yolo_iou: 0.45
-
-# YOLO inference image size.
 yolo_imgsz: 640
 
-# Old YOLO-box padding.
-# Only used if yolo_fixed_ratio is false.
 yolo_padding_x: 0.04
 yolo_padding_y: 0.04
 
-# New crop strategy:
-# YOLO finds the hand/wrist box.
-# The final crop uses a fixed ratio around the detected center.
 yolo_fixed_ratio: True
-
-# width / height.
-# 0.75 gives a vertical crop, better for hand + wrist.
-# 1.0 gives a square crop.
 yolo_crop_ratio: 0.75
-
-# Increase if fingers or wrist are cut.
-# Decrease if there is too much black background.
 yolo_crop_scale: 1.12
-
-# Final saved crop size.
-# EfficientNetV2 can train with this resized image.
 yolo_output_size: 384
 
-# Horizontal crop shift.
-# 0.0 means keep YOLO center.
 yolo_center_shift_x: 0.0
-
-# Vertical crop shift.
-# Positive value moves crop down toward the wrist.
 yolo_center_shift_y: 0.05
 
-# Padding value used when crop exceeds image borders.
-# 0 = black.
 yolo_pad_value: 0
-
-# Save visual preview images for checking crop quality.
 yolo_save_previews: True
 
-# Fallback if YOLO does not detect a hand.
-# Options:
-#   original
-#   classical_crop
-#   skip
+# If YOLO misses a hand, do not skip the image.
+# Use the classical crop instead.
 yolo_fallback: "classical_crop"
 
-# YOLO device:
-#   ""    -> automatic
-#   "cpu" -> force CPU
-#   "0"   -> force GPU 0
-yolo_device: ""
-
 # ============================================================
-# W&B tracking
+# W&B
 # ============================================================
 
-project_name: "age-regression-sweep"
+project_name: "age-regression-cheetah-cpu"
+run_name: "cpu_test_2_epochs_yolo_efficientnetv2m"
 
 # ============================================================
-# Grad-CAM heatmaps
+# Grad-CAM
 # ============================================================
 
-# For quick tests:
-#   generate_heatmaps: False
-#
-# For final training:
-#   generate_heatmaps: True
-generate_heatmaps: True
-
-# Maximum number of test images for heatmap generation.
-heatmap_max_images: 16
+# Keep False for the first test.
+# Heatmaps are slow on CPU.
+generate_heatmaps: False
+heatmap_max_images: 8
