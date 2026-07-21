@@ -1,134 +1,96 @@
-# ============================================================
 # Python
-# ============================================================
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
 *.so
-*.egg-info/
-.eggs/
-build/
-dist/
-site/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.cache/
+.coverage
+htmlcov/
 
-# ============================================================
 # Virtual environments
-# ============================================================
+.env
+.env.*
+!.env.example
 venv/
-.env/
+.venv/
 env/
 ENV/
-.venv/
-conda-meta/
+conda-env/
+pip-wheel-metadata/
 
-# ============================================================
-# Jupyter
-# ============================================================
-.ipynb_checkpoints/
-
-# ============================================================
-# IDE / OS
-# ============================================================
+# IDE and operating system
 .vscode/
 .idea/
+*.code-workspace
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# ============================================================
-# Logs
-# ============================================================
-*.log
-logs/
-wandb/
-mlruns/
-
-# ============================================================
-# Training outputs
-# ============================================================
-results/
-runs/
-checkpoints/
-outputs/
-artifacts/
-predictions/
-heatmaps/
-gradcam/
-grad_cam/
-
-# ============================================================
-# Preprocessed/generated images
-# These are generated automatically by main.py
-# ============================================================
-data/preprocessed/
-data/preprocessed/*
-data/*_preview/
-data/yolo_crop_preview/
-data/preprocessed/yolo_crop_preview/
-
-# ============================================================
-# Raw dataset
-# Do not upload medical/private image data to GitHub.
-# Keep only folder placeholders if needed.
-# ============================================================
+# Private medical data
 data/images/
-data/images/*
-!data/images/.gitkeep
-
-# ============================================================
-# Excel/data files
-# Usually private. Do not commit unless you are sure it can be public.
-# If your colleagues need the Excel, share it privately.
-# ============================================================
+data/raw/
+data/private/
+data/clinical/
+data/FCT2025_Final.xlsx
 data/*.xlsx
 data/*.xls
 data/*.csv
-data/*.parquet
-data/*.pkl
-data/*.pickle
+data/**/*.dcm
+data/**/*.dicom
 
-# Keep documentation files if you create them inside data/
+# Generated preprocessing and caches
+data/preprocessed/
+data/stages_images/
+data/cache/
+data/splits/
+data/**/*.cache
+*.cache
+
+# Preserve code and documentation inside data/
+!data/*.py
 !data/README.md
+!data/**/.gitkeep
 
-# ============================================================
-# Model weights
-# By default, ignore generated/trained weights.
-# ============================================================
+# Model weights and checkpoints
 *.pt
 *.pth
 *.ckpt
 *.onnx
 *.engine
+*.tflite
+*.torchscript
+*.pkl
+*.joblib
 
-# Exception: keep YOLO hand/wrist detector if it is small enough for GitHub.
-# If this file is too large, use Git LFS or share it separately.
-!models/yolo_hand/best.pt
+# Preserve model placement instructions
+!models/**/README.md
+!models/**/.gitkeep
 
-# ============================================================
-# Ultralytics YOLO output folders
-# ============================================================
-runs/detect/
-runs/train/
-runs/segment/
-runs/classify/
-ultralytics_runs/
+# Training and evaluation outputs
+results/
+runs/
+outputs/
+checkpoints/
+predictions_output/
+heatmaps_output/
+gradcam_output/
+logs_output/
+tensorboard/
+lightning_logs/
 
-# ============================================================
-# Temporary files
-# ============================================================
-tmp/
-temp/
+# Weights & Biases and experiment tracking
+wandb/
+mlruns/
+
+# Generated spreadsheets and figures
+test_predictions*.xlsx
+train_predictions*.xlsx
+val_predictions*.xlsx
 *.tmp
 *.bak
-*.old
+*.log
 
-# ============================================================
-# Windows / Anaconda leftovers
-# ============================================================
-*.lnk
-*.ini
+# Jupyter
+.ipynb_checkpoints/
